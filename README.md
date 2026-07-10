@@ -39,6 +39,7 @@ df['label'] = df['label'].apply(lambda x: 0 if x == 0 else 1)
 ```
 label_mapping = {'REST': 0, 'Stroop': 1, 'Reaction': 2, 'N-Back': 3}
 df['label'] = df['label'].map(label_mapping)
+```
 
 - Drop non-feature columns: **ensure `drop_cols` contains all non-feature columns** (IDs, session, label and any metadata). The code used for training does `X = df.drop(columns=[target_col])` and expects you to pass `drop_cols` to the `train_loso` function so only feature columns are used.
 
