@@ -249,14 +249,16 @@ def scores_to_dataframe(scores: Dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
     train_rows = []
     val_rows = []
 
-    for evaluation, model in zip(scores["evaluation"], scores["model"]):
+    for evaluation, model, person_id in zip(scores["evaluation"], scores["model"], scores["person_id"]):
 
         train = {
             k: v
             for k, v in evaluation["train"].items()
             if k not in {"cm", "threshold"}
+
         }
         train["model"] = model
+        train["person_id"] = person_id
 
         val = {
             k: v
@@ -264,6 +266,7 @@ def scores_to_dataframe(scores: Dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
             if k not in {"cm", "threshold"}
         }
         val["model"] = model
+        val["person_id"] = person_id
 
         train_rows.append(train)
         val_rows.append(val)
@@ -287,7 +290,10 @@ def print_grouped_metrics(
 
         for col in group.columns:
 
-            if col == "model":
+            if col in {"model", "person_id"}:
+                continue
+
+            if not pd.api.types.is_numeric_dtype(group[col]):
                 continue
 
             mean = group[col].mean()
@@ -316,9 +322,9 @@ def summarize_scores(scores: Dict) -> Tuple[pd.DataFrame, pd.DataFrame]:
         Validation metrics for every fold.
     """
 
-    df_train, df_val = scores_to_dataframe(scores)
+    df_train, df_val= scores_to_dataframe(scores)
 
     print_grouped_metrics(df_train, "Training Metrics")
     print_grouped_metrics(df_val, "Validation Metrics")
 
-    return df_train, df_val           
+    return df_train, df_val
