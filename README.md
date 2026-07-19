@@ -50,3 +50,5 @@ df['label'] = df['label'].map(label_mapping)
 - Function `scores = tr.train_loso(...)` will automaticlly apply Leave-one-subject-out (LOSO) cross validation
 - return scores dictionary which include *(['person_id', 'model', 'evaluation'])*
 - Finally, function `df_train, df_val = tr.summarize_scores(scores)` transforme the `scores` into separate dataframes and calculate mean ± std
+
+**Notice**: This repository does not accept public pull requests. Any submitted PRs will be automatically closed.
